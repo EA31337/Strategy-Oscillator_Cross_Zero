@@ -6,8 +6,8 @@
 
 /**
  * @file
- * Implements Oscillator Cross strategy.
+ * Implements Oscillator Cross Zero strategy.
  */
 
 // Includes the main code.
-#include "Stg_Oscillator_Cross.mq5"
+#include "Stg_Oscillator_Cross_Zero.mq5"
