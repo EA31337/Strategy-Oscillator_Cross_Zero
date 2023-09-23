@@ -59,11 +59,11 @@ struct Stg_Oscillator_Cross_Zero_Params_Defaults : StgParams {
                   ::Oscillator_Cross_Zero_PriceStopLevel, ::Oscillator_Cross_Zero_TickFilterMethod,
                   ::Oscillator_Cross_Zero_MaxSpread, ::Oscillator_Cross_Zero_Shift),
         line_signal(0) {
-    Set(STRAT_PARAM_LS, Oscillator_Cross_Zero_LotSize);
-    Set(STRAT_PARAM_OCL, Oscillator_Cross_Zero_OrderCloseLoss);
-    Set(STRAT_PARAM_OCP, Oscillator_Cross_Zero_OrderCloseProfit);
-    Set(STRAT_PARAM_OCT, Oscillator_Cross_Zero_OrderCloseTime);
-    Set(STRAT_PARAM_SOFT, Oscillator_Cross_Zero_SignalOpenFilterTime);
+    Set(STRAT_PARAM_LS, ::Oscillator_Cross_Zero_LotSize);
+    Set(STRAT_PARAM_OCL, ::Oscillator_Cross_Zero_OrderCloseLoss);
+    Set(STRAT_PARAM_OCP, ::Oscillator_Cross_Zero_OrderCloseProfit);
+    Set(STRAT_PARAM_OCT, ::Oscillator_Cross_Zero_OrderCloseTime);
+    Set(STRAT_PARAM_SOFT, ::Oscillator_Cross_Zero_SignalOpenFilterTime);
   }
   // Getters.
   uint GetLineSignal() { return line_signal; }
@@ -87,7 +87,7 @@ class Stg_Oscillator_Cross_Zero : public Strategy {
     ChartParams _cparams(_tf, _Symbol);
     TradeParams _tparams;
     Stg_Oscillator_Cross_Zero *_strat =
-        new Stg_Oscillator_Cross_Zero(_stg_params, _tparams, _cparams, "Oscillator_Cross_Zero");
+        new Stg_Oscillator_Cross_Zero(_stg_params, _tparams, _cparams, "Oscillator Cross Zero");
     _strat.ssparams = stg_oscillator_cross_zero_defaults;
     return _strat;
   }
@@ -97,7 +97,7 @@ class Stg_Oscillator_Cross_Zero : public Strategy {
    */
   bool IsValidEntry(IndicatorBase *_indi, int _shift = 0) {
     bool _result = true;
-    switch (Oscillator_Cross_Zero_Type) {
+    switch (::Oscillator_Cross_Zero_Type) {
       case STG_OSCILLATOR_CROSS_ZERO_TYPE_MACD:
         _result &= dynamic_cast<Indi_MACD *>(_indi).GetFlag(INDI_ENTRY_FLAG_IS_VALID, _shift) &&
                    dynamic_cast<Indi_MACD *>(_indi).GetFlag(INDI_ENTRY_FLAG_IS_VALID, _shift + 1);
