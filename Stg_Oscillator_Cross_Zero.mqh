@@ -40,6 +40,7 @@ INPUT int Oscillator_Cross_Zero_Indi_MACD_Period_Slow = 34;                     
 INPUT int Oscillator_Cross_Zero_Indi_MACD_Period_Signal = 10;                         // Period Signal
 INPUT ENUM_APPLIED_PRICE Oscillator_Cross_Zero_Indi_MACD_Applied_Price = PRICE_OPEN;  // Applied Price
 INPUT int Oscillator_Cross_Zero_Indi_MACD_Shift = 0;                                  // Shift
+INPUT ENUM_IDATA_SOURCE_TYPE Oscillator_Cross_Zero_Indi_MACD_SourceType = IDATA_BUILTIN; // Source type
 INPUT_GROUP("Oscillator strategy: RVI indicator params");
 INPUT ENUM_SIGNAL_LINE Oscillator_Cross_Zero_Indi_RVI_Line_Signal = LINE_SIGNAL;         // Fast line
 INPUT unsigned int Oscillator_Cross_Zero_Indi_RVI_Period = 12;                           // Averaging period
@@ -125,16 +126,15 @@ class Stg_Oscillator_Cross_Zero : public Strategy {
             ::Oscillator_Cross_Zero_Indi_MACD_Period_Signal, ::Oscillator_Cross_Zero_Indi_MACD_Applied_Price,
             ::Oscillator_Cross_Zero_Indi_MACD_Shift);
         _indi_params.SetTf(Get<ENUM_TIMEFRAMES>(STRAT_PARAM_TF));
-        SetIndicator(new Indi_MACD(_indi_params), ::Oscillator_Cross_Zero_Type);
+        SetIndicator(new Indi_MACD(_indi_params, ::Oscillator_Cross_Zero_Indi_MACD_SourceType), ::Oscillator_Cross_Zero_Type);
         ssparams.SetLineSignal((uint)Oscillator_Cross_Zero_Indi_MACD_Line_Signal);
         break;
       }
       case STG_OSCILLATOR_CROSS_ZERO_TYPE_RVI:  // RVI
       {
         IndiRVIParams _indi_params(::Oscillator_Cross_Zero_Indi_RVI_Period, ::Oscillator_Cross_Zero_Indi_RVI_Shift);
-        _indi_params.SetDataSourceType(::Oscillator_Cross_Zero_Indi_RVI_SourceType);
         _indi_params.SetTf(Get<ENUM_TIMEFRAMES>(STRAT_PARAM_TF));
-        SetIndicator(new Indi_RVI(_indi_params), ::Oscillator_Cross_Zero_Type);
+        SetIndicator(new Indi_RVI(_indi_params, ::Oscillator_Cross_Zero_Indi_RVI_SourceType), ::Oscillator_Cross_Zero_Type);
         ssparams.SetLineSignal((uint)Oscillator_Cross_Zero_Indi_RVI_Line_Signal);
         break;
       }
@@ -148,7 +148,7 @@ class Stg_Oscillator_Cross_Zero : public Strategy {
    * Check strategy's opening signal.
    */
   bool SignalOpen(ENUM_ORDER_TYPE _cmd, int _method, float _level = 0.0f, int _shift = 0) {
-    IndicatorBase *_indi = GetIndicator(::Oscillator_Cross_Zero_Type);
+    IndicatorData *_indi = GetIndicator(::Oscillator_Cross_Zero_Type);
     // uint _ishift = _indi.GetShift(); // @todo
     bool _result = Oscillator_Cross_Zero_Type != STG_OSCILLATOR_CROSS_ZERO_TYPE_0_NONE && IsValidEntry(_indi, _shift);
     if (!_result) {
